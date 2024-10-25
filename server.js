@@ -29,21 +29,20 @@ config.validate();
 const ticketPool = new TicketPool(50);
 
 // Create multiple TicketVendor instances
-const vendor1 = new TicketVendor(1, 5, 3000, ticketPool); // Vendor 1 releases 5 tickets every 3 seconds
-const vendor2 = new TicketVendor(2, 3, 2000, ticketPool); // Vendor 2 releases 3 tickets every 2 seconds
+const producer = new TicketVendor(1, 5, 3000, ticketPool);
+const manager = new TicketVendor(2, 5, 5000, ticketPool);
+// const vendor2 = new TicketVendor(1, 5, 3000, ticketPool);
+// const vendor3 = new TicketVendor(1, 5, 3000, ticketPool);
 
-// Start the vendors producing tickets
-vendor1.startProducing();
-vendor2.startProducing();
+producer.startProducing();
 
 const customer1 = new Customer(1, 2500, ticketPool);
-customer1.startPurchase();
+customer1.startPurchasing();
 
 // Optionally, stop vendors after a certain amount of time (for testing purposes)
 setTimeout(() => {
-  vendor1.stopProducing();
-  vendor2.stopProducing();
-  customer1.stopPurchase();
+  producer.stopProducing();
+  customer1.stopPurchasing();
 }, 20000); // Stop both vendors after 20 seconds
 
 app.get("/", (req, res) => {

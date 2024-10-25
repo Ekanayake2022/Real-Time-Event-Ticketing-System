@@ -1,4 +1,5 @@
 import { Mutex } from "async-mutex";
+import logger from "../utils/logger.js";
 
 class TicketPool {
   constructor(maxCapacity) {
@@ -7,38 +8,47 @@ class TicketPool {
     this.mutex = new Mutex();
   }
 
+  // Add a ticket to the pool with thread safety and capacity checks
   async addTicket(ticket) {
     const release = await this.mutex.acquire();
     try {
       if (this.tickets.length < this.maxCapacity) {
         this.tickets.push(ticket);
-        console.log("Ticket added to the pool.");
+        logger.log("Ticket added to the pool.");
         return true;
       } else {
-        console.log("Ticket pool is full");
+        logger.log("Ticket pool is full! No more tickets can be added.");
         return false;
       }
+    } catch (error) {
+      logger.error(`Error adding ticket: ${error.message}`);
+      return false;
     } finally {
       release();
     }
   }
 
+  // Remove a ticket from the pool safely
   async removeTicket() {
     const release = await this.mutex.acquire();
     try {
       if (this.tickets.length > 0) {
         const ticket = this.tickets.shift();
-        console.log(`Ticket removed from the pool`);
-        return ticket;
+        logger.log(`Ticket removed from the pool`);
         return ticket;
       } else {
-        console.log(`No tickets available in ticket pool`);
+        logger.log("No tickets available for purchase!");
         return null;
       }
+    } catch (error) {
+      logger.error(`Error removing ticket: ${error.message}`);
+      return null;
     } finally {
       release();
     }
   }
+
+  // Get current tickets
   getTickets() {
     return this.tickets;
   }

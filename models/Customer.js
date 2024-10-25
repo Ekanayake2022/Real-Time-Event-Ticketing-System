@@ -1,38 +1,42 @@
+import logger from "../utils/logger.js";
+
 class Customer {
   constructor(customerId, retrievalInterval, ticketPool) {
-    this.customerId = customerId;
-    this.retrievalInterval = retrievalInterval;
-    this.ticketPool = ticketPool;
+    this.customerId = customerId; // Unique ID for the customer
+    this.retrievalInterval = retrievalInterval; // Time interval between ticket purchases (in ms)
+    this.ticketPool = ticketPool; // Shared ticket pool
     this.timer = null;
   }
 
-  retrieveTickets() {
-    console.log(`Customer ${this.customerId} is retrieving tickets.`);
-    this.purchaseTicket(); // Add logic to purchase tickets
-  }
-
-  startPurchase() {
-    console.log(`Customer ${this.customerId} started purchasing tickets.`);
-
+  // Start the customer "thread", which attempts to purchase tickets at intervals
+  startPurchasing() {
+    logger.log(
+      `Customer ${this.customerId} started attempting to purchase tickets.`
+    );
     this.timer = setInterval(() => {
-      this.retrieveTickets(); // Call the renamed method
-    }, this.retrievalInterval); // Use the retrievalInterval property
+      this.purchaseTicket();
+    }, this.retrievalInterval);
   }
 
-  stopPurchase() {
+  // Stop the customer from purchasing tickets
+  stopPurchasing() {
     clearInterval(this.timer);
-    console.log(`Customer ${this.customerId} stopped purchasing tickets.`);
+    logger.log(`Customer ${this.customerId} stopped purchasing tickets.`);
   }
 
+  // Attempt to retrieve a ticket from the ticket pool
   purchaseTicket() {
     const purchasedTicket = this.ticketPool.removeTicket();
 
     if (purchasedTicket) {
-      console.log(
-        `Customer ${this.customerId} purchased ticket for event: ${purchasedTicket.event}`
-      );
+      // logger.log(
+      //   `Customer ${this.customerId} purchased ticket for event: ${purchasedTicket.event} at $${purchasedTicket.price}`
+      // );
+      logger.log(`Customer ${this.customerId} purchased ticket`);
     } else {
-      console.log(`Customer ${this.customerId} could not purchase a ticket`);
+      logger.log(
+        `Customer ${this.customerId} could not purchase a ticket, none available.`
+      );
     }
   }
 }

@@ -7,8 +7,7 @@ function App() {
   useEffect(() => {
     // Fetch data from the backend when the component mounts
     axios
-      .get("http://localhost:3000")
-      .post("http://localhost:3000")
+      .get("http://localhost:3001")
       .then((response) => {
         setMessage(response.data);
       })
