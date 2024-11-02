@@ -1,27 +1,50 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import ConfigurationForm from "./components/ConfigurationForm";
+import TicketDisplay from "./components/TicketDisplay";
+import ControlPanel from "./components/ControlPanel";
+import LogDisplay from "./components/LogDisplay";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [isSystemRunning, setIsSystemRunning] = useState(false);
+  const [config, setConfig] = useState({
+    maxCapacity: 10,
+    ticketReleaseInterval: 3000,
+    retrievalInterval: 2000,
+  });
 
-  useEffect(() => {
-    // Fetch data from the backend when the component mounts
+  const handleConfigurationSubmit = (newConfig) => {
+    setConfig(newConfig);
     axios
-      .get("http://localhost:3001")
-      .then((response) => {
-        setMessage(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching data:", error);
-      });
-  }, []);
+      .post("http://localhost:3001/config", newConfig)
+      .then(() => console.log("Configuration saved"))
+      .catch((error) => console.error("Error saving configuration:", error));
+  };
+  const startSystem = (newConfig) => {
+    setIsSystemRunning(true);
+    axios
+      .post("http://localhost:3001/start", newConfig)
+      .then(() => console.log("System started"))
+      .catch((error) => console.error("Error starting system:", error));
+  };
+  const stopSystem = (newConfig) => {
+    setIsSystemRunning(false);
+    axios
+      .post("http://localhost:3001/stop", newConfig)
+      .then(() => console.log("System Stoped"))
+      .catch((error) => console.error("Error Stopping system:", error));
+  };
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Real-Time Event Ticketing System</h1>
-        <p>{message}</p>
-      </header>
+      <h1> Ticketing System </h1>
+      <ConfigurationForm onSubmit={handleConfigurationSubmit} />
+      <ControlPanel
+        onStart={() => startSystem(config)}
+        onStop={() => stopSystem(config)}
+      />
+      <TicketDisplay />
+      <LogDisplay />
     </div>
   );
 }
