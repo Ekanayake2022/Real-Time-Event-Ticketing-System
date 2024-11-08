@@ -1,0 +1,22 @@
+/* App.css */
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.status-message {
+  margin: 20px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.configuration-form,
+.control-panel,
+.ticket-display,
+.log-display {
+  margin: 20px 0;
+}

@@ -7,7 +7,7 @@ function TicketDisplay() {
   useEffect(() => {
     const fetchTickets = () => {
       axios
-        .get("http://localhost:3001/tickets")
+        .get("http://localhost:3001/api/tickets")
         .then((response) => setTickets(response.data))
         .catch((error) => console.error("Error fetching tickets:", error));
     };

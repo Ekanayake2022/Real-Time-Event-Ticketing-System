@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./logDisplay.css";
 
 function LogDisplay() {
   const [logs, setLogs] = useState([]);
@@ -7,8 +8,12 @@ function LogDisplay() {
   useEffect(() => {
     const fetchLogs = () => {
       axios
-        .get("http://localhost:3001/logs")
-        .then((response) => setLogs(response.data))
+        .get("http://localhost:3001/api/logs")
+        .then((response) => {
+          const logData = response.data.logs;
+          // Check if logData is a string and split by newline
+          setLogs(typeof logData === "string" ? logData.split("\n") : logData);
+        })
         .catch((error) => console.error("Error fetching logs:", error));
     };
 
@@ -20,7 +25,7 @@ function LogDisplay() {
 
   return (
     <div>
-      <h2> System Logs </h2>
+      <h2>System Logs</h2>
       <div className="log-display">
         {logs.map((log, index) => (
           <p key={index}>{log}</p>

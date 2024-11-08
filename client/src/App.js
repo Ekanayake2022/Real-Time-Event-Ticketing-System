@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import ConfigurationForm from "./components/ConfigurationForm";
 import TicketDisplay from "./components/TicketDisplay";
 import ControlPanel from "./components/ControlPanel";
 import LogDisplay from "./components/LogDisplay";
+import "./App.css";
 
 function App() {
   const [isSystemRunning, setIsSystemRunning] = useState(false);
@@ -31,7 +32,7 @@ function App() {
     setIsSystemRunning(false);
     axios
       .post("http://localhost:3001/stop", newConfig)
-      .then(() => console.log("System Stoped"))
+      .then(() => console.log("System Stopped"))
       .catch((error) => console.error("Error Stopping system:", error));
   };
 
@@ -39,6 +40,7 @@ function App() {
     <div className="App">
       <h1> Ticketing System </h1>
       <ConfigurationForm onSubmit={handleConfigurationSubmit} />
+      {isSystemRunning ? <p>System is running</p> : <p>System is stopped</p>}
       <ControlPanel
         onStart={() => startSystem(config)}
         onStop={() => stopSystem(config)}

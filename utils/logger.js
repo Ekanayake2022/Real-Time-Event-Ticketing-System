@@ -33,6 +33,14 @@ const logger = {
     // Append the error message to the log file
     fs.appendFileSync(filePath, logMessage, { encoding: "utf-8" });
   },
+  getLogs: () => {
+    try {
+      return fs.readFileSync(filePath, { encoding: "utf-8" });
+    } catch (error) {
+      console.error("Error reading logs:", error);
+      return "Error reading logs.";
+    }
+  },
 };
 
 export default logger;

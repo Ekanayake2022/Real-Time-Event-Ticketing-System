@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./configurationForm.css";
 
 function ConfigurationForm({ onSubmit }) {
@@ -8,22 +9,36 @@ function ConfigurationForm({ onSubmit }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSubmit({
-      maxCapacity,
-      ticketReleaseInterval,
-      retrievalInterval,
-    });
+
+    // Convert string values to numbers
+    const configData = {
+      totalTickets: maxCapacity,
+      ticketReleaseRate: ticketReleaseInterval,
+      customerRetrievalRate: retrievalInterval,
+      maxTicketCapacity: maxCapacity,
+    };
+
+    // Send the configuration to the backend
+    axios
+      .post("http://localhost:3001/api/config", configData)
+      .then((response) => {
+        console.log(response.data.message);
+        onSubmit && onSubmit(configData);
+      })
+      .catch((error) => {
+        console.error("Error saving configuration:", error);
+      });
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3> Configuration settings </h3>
+      <h3>Configuration settings</h3>
       <label>
         Max ticket capacity:
         <input
           type="number"
           value={maxCapacity}
-          onChange={(event) => setMaxCapacity(event.target.value)}
+          onChange={(event) => setMaxCapacity(Number(event.target.value))}
         />
       </label>
       <label>
@@ -31,7 +46,9 @@ function ConfigurationForm({ onSubmit }) {
         <input
           type="number"
           value={ticketReleaseInterval}
-          onChange={(event) => setTicketReleaseInterval(event.target.value)}
+          onChange={(event) =>
+            setTicketReleaseInterval(Number(event.target.value))
+          }
         />
       </label>
       <label>
@@ -39,10 +56,10 @@ function ConfigurationForm({ onSubmit }) {
         <input
           type="number"
           value={retrievalInterval}
-          onChange={(event) => setRetrievalInterval(event.target.value)}
+          onChange={(event) => setRetrievalInterval(Number(event.target.value))}
         />
       </label>
-      <button type="submit"> Save Configuration </button>
+      <button type="submit">Save Configuration</button>
     </form>
   );
 }

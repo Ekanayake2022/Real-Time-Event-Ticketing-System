@@ -86,6 +86,15 @@ class Configuration {
       return null;
     }
   }
+
+  toPlainObject() {
+    return {
+      totalTickets: this.totalTickets,
+      ticketReleaseRate: this.ticketReleaseRate,
+      customerRetrievalRate: this.customerRetrievalRate,
+      maxTicketCapacity: this.maxTicketCapacity,
+    };
+  }
 }
 
 export default Configuration;

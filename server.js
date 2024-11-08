@@ -1,57 +1,108 @@
+// server.js
 import express from "express";
 import cors from "cors";
 import path from "path";
-import Configuration from "./models/configuration.js"; // Include .js extension
-import TicketPool from "./models/TicketPool.js"; // Include .js extension
-import TicketVendor from "./models/Vendor.js"; // Include .js extension
+import bodyParser from "body-parser";
+import fs from "fs";
+import { fileURLToPath } from "url";
+import Configuration from "./models/Configuration.js";
+import TicketPool from "./models/TicketPool.js";
+import TicketVendor from "./models/Vendor.js";
 import Customer from "./models/Customer.js";
+import logger from "./utils/logger.js";
+
+// Fix for __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-// const port = process.env.PORT || 3001;
-const port = 3001;
+const PORT = process.env.PORT || 3001;
+const CONFIG_PATH = path.join(__dirname, "config.json");
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-const config = new Configuration(100, 5, 5, 1000);
-config.validate();
+let ticketPool = new TicketPool(10);
+let vendors = [];
+let customers = [];
+let isSystemRunning = false;
 
-// const jsonPath = path.join(__dirname, "config.json");
-// const textPath = path.join(__dirname, "config.txt");
+// Endpoint to save configuration to JSON file
+app.post("/api/config", (req, res) => {
+  const { maxCapacity, ticketReleaseInterval, retrievalInterval } = req.body;
 
-// config.saveToJson(jsonPath); // Corrected method name
-// config.saveToText(textPath);
+  // Log the configuration update
+  logger.log(
+    `Configuration updated: Max Capacity - ${maxCapacity}, Ticket Release Interval - ${ticketReleaseInterval}, Retrieval Interval - ${retrievalInterval}`
+  );
 
-// const loadedJson = Configuration.loadFromJson(jsonPath); // Corrected method name
-// const loadedText = Configuration.loadFromText(textPath); // Corrected method name
-
-// Initialize the shared TicketPool with a maximum capacity of 50 tickets
-const ticketPool = new TicketPool(50);
-
-// Create multiple TicketVendor instances
-const producer = new TicketVendor(1, 5, 3000, ticketPool);
-const manager = new TicketVendor(2, 5, 5000, ticketPool);
-// const vendor2 = new TicketVendor(1, 5, 3000, ticketPool);
-// const vendor3 = new TicketVendor(1, 5, 3000, ticketPool);
-
-producer.startProducing();
-
-const customer1 = new Customer(1, 2500, ticketPool);
-customer1.startPurchasing();
-
-// Optionally, stop vendors after a certain amount of time (for testing purposes)
-setTimeout(() => {
-  producer.stopProducing();
-  customer1.stopPurchasing();
-}, 20000); // Stop both vendors after 20 seconds
-
-app.get("/", (req, res) => {
-  res.send("Hello from the server!");
+  // Save configuration to JSON file
+  const config = { maxCapacity, ticketReleaseInterval, retrievalInterval };
+  fs.writeFile(CONFIG_PATH, JSON.stringify(config, null, 2), (err) => {
+    if (err) {
+      console.error("Error saving configuration to JSON:", err);
+      return res.status(500).json({ message: "Error saving configuration." });
+    }
+    console.log("Configuration saved to JSON file.");
+    res.status(200).json({ message: "Configuration updated" });
+  });
 });
 
-app.post("/submit", (req, res) => {
-  res.send("Post request from client");
+// Endpoint to start the ticketing system
+app.post("/api/start", (req, res) => {
+  if (isSystemRunning) {
+    return res.status(400).json({ message: "System already running" });
+  }
+
+  const { maxCapacity, ticketReleaseInterval, retrievalInterval } =
+    req.body.config || {};
+
+  ticketPool = new TicketPool(maxCapacity || 10);
+
+  vendors = [
+    new TicketVendor(1, 5, ticketReleaseInterval || 3000, ticketPool),
+    new TicketVendor(2, 5, ticketReleaseInterval || 3000, ticketPool),
+  ];
+
+  customers = [
+    new Customer(1, retrievalInterval || 2000, ticketPool),
+    new Customer(2, retrievalInterval || 2000, ticketPool),
+  ];
+
+  vendors.forEach((vendor) => vendor.startProducing());
+  customers.forEach((customer) => customer.startPurchasing());
+
+  isSystemRunning = true;
+  logger.log("System started");
+  res.status(200).json({ message: "System started" });
 });
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
+
+// Endpoint to stop the ticketing system
+app.post("/api/stop", (req, res) => {
+  if (!isSystemRunning) {
+    return res.status(400).json({ message: "System already stopped" });
+  }
+
+  vendors.forEach((vendor) => vendor.stopProducing());
+  customers.forEach((customer) => customer.stopPurchasing());
+
+  isSystemRunning = false;
+  logger.log("System stopped");
+  res.status(200).json({ message: "System stopped" });
+});
+
+// Endpoint to retrieve tickets
+app.get("/api/tickets", (req, res) => {
+  res.json(ticketPool.getTickets());
+});
+
+// Endpoint to retrieve logs
+app.get("/api/logs", (req, res) => {
+  const logs = logger.getLogs();
+  res.json({ logs });
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });

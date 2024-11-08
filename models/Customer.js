@@ -29,10 +29,10 @@ class Customer {
     const purchasedTicket = this.ticketPool.removeTicket();
 
     if (purchasedTicket) {
-      // logger.log(
-      //   `Customer ${this.customerId} purchased ticket for event: ${purchasedTicket.event} at $${purchasedTicket.price}`
-      // );
-      logger.log(`Customer ${this.customerId} purchased ticket`);
+      logger.log(
+        `Customer ${this.customerId} purchased ticket${purchasedTicket.price}`
+      );
+      // logger.log(`Customer ${this.customerId} purchased ticket`);
     } else {
       logger.log(
         `Customer ${this.customerId} could not purchase a ticket, none available.`
