@@ -32,9 +32,9 @@ function ConfigurationForm({ onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Configuration settings</h3>
+      <h3> Configurations </h3>
       <label>
-        Max ticket capacity:
+        Max ticket capacity
         <input
           type="number"
           value={maxCapacity}
@@ -42,7 +42,7 @@ function ConfigurationForm({ onSubmit }) {
         />
       </label>
       <label>
-        Ticket release interval:
+        Ticket release interval
         <input
           type="number"
           value={ticketReleaseInterval}
@@ -52,7 +52,7 @@ function ConfigurationForm({ onSubmit }) {
         />
       </label>
       <label>
-        Ticket retrieval interval:
+        Ticket retrieval interval
         <input
           type="number"
           value={retrievalInterval}

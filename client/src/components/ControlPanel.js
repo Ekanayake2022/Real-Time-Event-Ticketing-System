@@ -28,7 +28,6 @@ function ControlPanel({ onStart, onStop }) {
   };
   return (
     <div className="control-container">
-      <h2>Control Panel</h2>
       <button onClick={startSystem}> Start </button>
       <button onClick={stopSystem}> Stop </button>
     </div>

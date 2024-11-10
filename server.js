@@ -11,7 +11,6 @@ import TicketVendor from "./models/Vendor.js";
 import Customer from "./models/Customer.js";
 import logger from "./utils/logger.js";
 
-// Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
