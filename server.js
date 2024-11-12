@@ -1,4 +1,3 @@
-// server.js
 import express from "express";
 import cors from "cors";
 import path from "path";
@@ -32,7 +31,7 @@ app.post("/api/config", (req, res) => {
 
   // Log the configuration update
   logger.log(
-    `Configuration updated: Max Capacity - ${maxCapacity}, Ticket Release Interval - ${ticketReleaseInterval}, Retrieval Interval - ${retrievalInterval}`
+    `Configuration updated: Max Capacity - ${maxCapacity}, Ticket Release Interval - ${ticketReleaseInterval}, Retrieval Interval - ${retrievalInterval}`,
   );
 
   // Save configuration to JSON file
