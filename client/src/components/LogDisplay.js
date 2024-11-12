@@ -25,7 +25,7 @@ function LogDisplay() {
 
   return (
     <div>
-      <h2>System Logs</h2>
+      <h2>System Logs in the system</h2>
       <div className="log-display">
         {logs.map((log, index) => (
           <p key={index}>{log}</p>
