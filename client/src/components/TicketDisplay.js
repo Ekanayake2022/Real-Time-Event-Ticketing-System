@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./ticketDisplay.css";
 
 function TicketDisplay() {
   const [tickets, setTickets] = useState([]);
@@ -19,13 +20,14 @@ function TicketDisplay() {
   }, []);
 
   return (
-    <div>
+    <div className="ticket-container">
       <h3>Ticket Availability</h3>
-      <ul>
+      <ul className="ticket-list ">
         {tickets.length > 0 ? (
           tickets.map((ticket) => (
             <li key={ticket.id}>
-              {ticket.event} - ${ticket.price}
+              <span className="ticket-event "> {ticket.event} </span>
+              <span className="ticket-price "> {ticket.price} </span>
             </li>
           ))
         ) : (

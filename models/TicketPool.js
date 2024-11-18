@@ -1,5 +1,5 @@
-import { Mutex } from "async-mutex";
 import logger from "../utils/logger.js";
+import { Mutex } from 'async-mutex';
 
 class TicketPool {
   constructor(maxCapacity) {
@@ -49,8 +49,17 @@ class TicketPool {
   }
 
   // Get current tickets
-  getTickets() {
-    return this.tickets;
+  async getTickets() {
+    const release = await this.mutex.acquire();
+    try {
+      logger.log("Fetching tickets from Ticket pool.");
+      return [...this.tickets];
+    } catch (error) {
+      logger.error(`Error fetching tickets: ${error.message}`);
+      return [];
+    } finally {
+      release();
+    }
   }
 }
 

@@ -31,7 +31,7 @@ app.post("/api/config", (req, res) => {
 
   // Log the configuration update
   logger.log(
-    `Configuration updated: Max Capacity - ${maxCapacity}, Ticket Release Interval - ${ticketReleaseInterval}, Retrieval Interval - ${retrievalInterval}`,
+    `Configuration updated: Max Capacity - ${maxCapacity}, Ticket Release Interval - ${ticketReleaseInterval}, Retrieval Interval - ${retrievalInterval}`
   );
 
   // Save configuration to JSON file
@@ -59,12 +59,10 @@ app.post("/api/start", (req, res) => {
 
   vendors = [
     new TicketVendor(1, 5, ticketReleaseInterval || 3000, ticketPool),
-    new TicketVendor(2, 5, ticketReleaseInterval || 3000, ticketPool),
   ];
 
   customers = [
     new Customer(1, retrievalInterval || 2000, ticketPool),
-    new Customer(2, retrievalInterval || 2000, ticketPool),
   ];
 
   vendors.forEach((vendor) => vendor.startProducing());
@@ -90,8 +88,13 @@ app.post("/api/stop", (req, res) => {
 });
 
 // Endpoint to retrieve tickets
-app.get("/api/tickets", (req, res) => {
-  res.json(ticketPool.getTickets());
+app.get("/api/tickets", async (req, res) => {
+  try {
+    const tickets = await ticketPool.getTickets();
+    res.json(tickets);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch tickets" });
+  }
 });
 
 // Endpoint to retrieve logs
