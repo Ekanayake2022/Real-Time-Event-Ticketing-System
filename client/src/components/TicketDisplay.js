@@ -4,6 +4,7 @@ import "./ticketDisplay.css";
 
 function TicketDisplay() {
   const [tickets, setTickets] = useState([]);
+  const [requests, setRequests] = useState([]);
 
   useEffect(() => {
     const fetchTickets = () => {
@@ -13,8 +14,20 @@ function TicketDisplay() {
         .catch((error) => console.error("Error fetching tickets:", error));
     };
 
+    const fetchRequests = () => {
+      axios
+        .get("http://localhost:3001/api/requests")
+        .then((response) => setRequests(response.data))
+        .catch((error) => console.error("Error fetching requests:", error));
+    };
+
     fetchTickets();
-    const interval = setInterval(fetchTickets, 2000); // Poll every 2 seconds
+    fetchRequests();
+    // Poll every 2 seconds
+    const interval = setInterval(() => {
+      fetchTickets();
+      fetchRequests();
+    }, 2000);
 
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);
@@ -22,16 +35,30 @@ function TicketDisplay() {
   return (
     <div className="ticket-container">
       <h3>Ticket Availability</h3>
-      <ul className="ticket-list ">
+      <ul className="ticket-list">
         {tickets.length > 0 ? (
           tickets.map((ticket) => (
             <li key={ticket.id}>
-              <span className="ticket-event "> {ticket.event} </span>
-              <span className="ticket-price "> {ticket.price} </span>
+              <span className="ticket-event">{ticket.event}</span>
+              <span className="ticket-price">{ticket.price}</span>
             </li>
           ))
         ) : (
           <p>No tickets available</p>
+        )}
+      </ul>
+
+      <h3>Pending Requests</h3>
+      <ul>
+        {requests.length > 0 ? (
+          requests.map((request) => (
+            <li key={request.id}>
+              <span className="request-customer">{request.customerId}</span>
+              <span className="request-priority">{request.priority}</span>
+            </li>
+          ))
+        ) : (
+          <p>No pending requests</p>
         )}
       </ul>
     </div>

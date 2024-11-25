@@ -5,6 +5,7 @@ import TicketDisplay from "./components/TicketDisplay";
 import ControlPanel from "./components/ControlPanel";
 import LogDisplay from "./components/LogDisplay";
 import "./App.css";
+import CustomerForm from "./components/CustomerForm";
 
 function App() {
   const [isSystemRunning, setIsSystemRunning] = useState(false);
@@ -41,6 +42,7 @@ function App() {
       <h1> Ticketing System </h1>
       <ConfigurationForm onSubmit={handleConfigurationSubmit} />
       {isSystemRunning ? <p>System is running</p> : <p>System is stopped</p>}
+      <CustomerForm />
       <ControlPanel
         onStart={() => startSystem(config)}
         onStop={() => stopSystem(config)}

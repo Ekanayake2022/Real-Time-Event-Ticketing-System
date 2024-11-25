@@ -1,1 +1,5 @@
-{}
+{
+  "maxCapacity": 400,
+  "ticketReleaseInterval": 3,
+  "retrievalInterval": 3
+}

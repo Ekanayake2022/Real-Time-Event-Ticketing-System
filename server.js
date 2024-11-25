@@ -6,7 +6,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import Configuration from "./models/Configuration.js";
 import TicketPool from "./models/TicketPool.js";
-import TicketVendor from "./models/Vendor.js";
+import Vendor from "./models/Vendor.js";
 import Customer from "./models/Customer.js";
 import logger from "./utils/logger.js";
 
@@ -31,7 +31,7 @@ app.post("/api/config", (req, res) => {
 
   // Log the configuration update
   logger.log(
-    `Configuration updated: Max Capacity - ${maxCapacity}, Ticket Release Interval - ${ticketReleaseInterval}, Retrieval Interval - ${retrievalInterval}`
+    `Configuration updated: maxCapacity=${maxCapacity}, ticketReleaseInterval=${ticketReleaseInterval}, retrievalInterval=${retrievalInterval}`
   );
 
   // Save configuration to JSON file
@@ -47,7 +47,7 @@ app.post("/api/config", (req, res) => {
 });
 
 // Endpoint to start the ticketing system
-app.post("/api/start", (req, res) => {
+app.post("/api/start", async (req, res) => {
   if (isSystemRunning) {
     return res.status(400).json({ message: "System already running" });
   }
@@ -57,12 +57,11 @@ app.post("/api/start", (req, res) => {
 
   ticketPool = new TicketPool(maxCapacity || 10);
 
-  vendors = [
-    new TicketVendor(1, 5, ticketReleaseInterval || 3000, ticketPool),
-  ];
+  vendors = [new Vendor(1, 5, ticketReleaseInterval || 3000, ticketPool)];
 
   customers = [
-    new Customer(1, retrievalInterval || 2000, ticketPool),
+    new Customer(1, retrievalInterval || 2000, ticketPool, 2), // VIP customer
+    new Customer(2, retrievalInterval || 3000, ticketPool, 0), // Regular customer
   ];
 
   vendors.forEach((vendor) => vendor.startProducing());
@@ -87,23 +86,66 @@ app.post("/api/stop", (req, res) => {
   res.status(200).json({ message: "System stopped" });
 });
 
+// Endpoint to add a customer
+app.post("/api/customers", (req, res) => {
+  const { customerId, priority, retrievalInterval } = req.body;
+
+  if (!customerId || priority === undefined || !retrievalInterval) {
+    return res.status(400).json({ message: "Invalid request body" });
+  }
+
+  const newCustomer = new Customer(
+    customerId,
+    retrievalInterval,
+    ticketPool,
+    priority
+  );
+  customers.push(newCustomer);
+  newCustomer.startPurchasing();
+
+  res
+    .status(200)
+    .json({ message: `Customer ${customerId} added and started purchasing.` });
+});
+
+// Endpoint to retrieve pending requests
+app.get("/api/requests", (req, res) => {
+  const requests = ticketPool.requestQueue.queue.map((customer) =>
+    customer.toJSON()
+  );
+  res.status(200).json(requests);
+});
+
 // Endpoint to retrieve tickets
 app.get("/api/tickets", async (req, res) => {
   try {
-    const tickets = await ticketPool.getTickets();
-    res.json(tickets);
+    const tickets = ticketPool.getTickets();
+    res.status(200).json(tickets);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch tickets" });
+    res.status(500).json({ message: "Error retrieving tickets" });
+  }
+});
+
+// Endpoint to retrieve customers
+app.get("/api/customers", (req, res) => {
+  try {
+    const customerData = customers.map((customer) => customer.toJSON());
+    res.status(200).json(customerData);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving customers" });
   }
 });
 
 // Endpoint to retrieve logs
 app.get("/api/logs", (req, res) => {
-  const logs = logger.getLogs();
-  res.json({ logs });
+  try {
+    const logs = logger.getLogs();
+    res.status(200).json({ logs });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving logs" });
+  }
 });
 
-// Start server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  logger.log(`Server is running on port ${PORT}`);
 });

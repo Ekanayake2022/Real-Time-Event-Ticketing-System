@@ -3,19 +3,19 @@ import axios from "axios";
 import "./configurationForm.css";
 
 function ConfigurationForm({ onSubmit }) {
-  const [maxCapacity, setMaxCapacity] = useState(10);
-  const [ticketReleaseInterval, setTicketReleaseInterval] = useState(3000);
-  const [retrievalInterval, setRetrievalInterval] = useState(2000);
+  const [totalTickets, setTotalTickets] = useState(0);
+  const [ticketReleaseInterval, setTicketReleaseInterval] = useState(0);
+  const [retrievalInterval, setRetrievalInterval] = useState(0);
+  const [maxCapacity, setMaxCapacity] = useState(0);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Convert string values to numbers
     const configData = {
-      totalTickets: maxCapacity,
-      ticketReleaseRate: ticketReleaseInterval,
-      customerRetrievalRate: retrievalInterval,
-      maxTicketCapacity: maxCapacity,
+      totalTickets,
+      ticketReleaseInterval,
+      retrievalInterval,
+      maxCapacity,
     };
 
     // Send the configuration to the backend
@@ -32,17 +32,17 @@ function ConfigurationForm({ onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3> Configurations </h3>
+      <h3>Configurations</h3>
       <label>
-        Max ticket capacity
+        Total Tickets
         <input
           type="number"
-          value={maxCapacity}
-          onChange={(event) => setMaxCapacity(Number(event.target.value))}
+          value={totalTickets}
+          onChange={(event) => setTotalTickets(Number(event.target.value))}
         />
       </label>
       <label>
-        Ticket release interval
+        Ticket Release Interval
         <input
           type="number"
           value={ticketReleaseInterval}
@@ -52,11 +52,19 @@ function ConfigurationForm({ onSubmit }) {
         />
       </label>
       <label>
-        Ticket retrieval interval
+        Ticket Retrieval Interval
         <input
           type="number"
           value={retrievalInterval}
           onChange={(event) => setRetrievalInterval(Number(event.target.value))}
+        />
+      </label>
+      <label>
+        Max Ticket Capacity
+        <input
+          type="number"
+          value={maxCapacity}
+          onChange={(event) => setMaxCapacity(Number(event.target.value))}
         />
       </label>
       <button type="submit">Save Configuration</button>

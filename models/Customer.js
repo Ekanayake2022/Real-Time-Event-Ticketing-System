@@ -1,11 +1,12 @@
 import logger from "../utils/logger.js";
 
 class Customer {
-  constructor(customerId, retrievalInterval, ticketPool) {
+  constructor(customerId, retrievalInterval, ticketPool, priority = 0) {
     this.customerId = customerId; // Unique ID for the customer
     this.retrievalInterval = retrievalInterval; // Time interval between ticket purchases (in ms)
     this.ticketPool = ticketPool; // Shared ticket pool
     this.timer = null;
+    this.priority = priority;
   }
 
   // Start the customer "thread", which attempts to purchase tickets at intervals
@@ -14,7 +15,7 @@ class Customer {
       `Customer ${this.customerId} started attempting to purchase tickets.`
     );
     this.timer = setInterval(() => {
-      this.purchaseTicket();
+      this.ticketPool.addRequest(this);
     }, this.retrievalInterval);
   }
 
@@ -24,20 +25,12 @@ class Customer {
     logger.log(`Customer ${this.customerId} stopped purchasing tickets.`);
   }
 
-  // Attempt to retrieve a ticket from the ticket pool
-  purchaseTicket() {
-    const purchasedTicket = this.ticketPool.removeTicket();
-
-    if (purchasedTicket) {
-      logger.log(
-        `Customer ${this.customerId} purchased ticket${purchasedTicket.price}`
-      );
-      // logger.log(`Customer ${this.customerId} purchased ticket`);
-    } else {
-      logger.log(
-        `Customer ${this.customerId} could not purchase a ticket, none available.`
-      );
-    }
+  toJSON() {
+    return {
+      customerId: this.customerId,
+      retrievalInterval: this.retrievalInterval,
+      priority: this.priority,
+    };
   }
 }
 
