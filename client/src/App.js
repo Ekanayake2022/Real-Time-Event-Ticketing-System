@@ -8,7 +8,7 @@ import "./App.css";
 import AddVendorForm from "./components/DynamicVendor and Customer/AddVendorForm";
 import RemoveVendorForm from "./components/DynamicVendor and Customer/RemoveVendorForm";
 import AddCustomerForm from "./components/DynamicVendor and Customer/AddCustomerForm";
-import RemoveCustomerForm from "./components/RemoveCustomerForm";
+import RemoveCustomerForm from "./components/DynamicVendor and Customer/RemoveCustomerForm";
 
 function App() {
   const [isSystemRunning, setIsSystemRunning] = useState(false);
