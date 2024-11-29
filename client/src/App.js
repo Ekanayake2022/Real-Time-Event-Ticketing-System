@@ -5,7 +5,10 @@ import TicketDisplay from "./components/TicketDisplay";
 import ControlPanel from "./components/ControlPanel";
 import LogDisplay from "./components/LogDisplay";
 import "./App.css";
-import CustomerForm from "./components/CustomerForm";
+import AddVendorForm from "./components/DynamicVendor and Customer/AddVendorForm";
+import RemoveVendorForm from "./components/DynamicVendor and Customer/RemoveVendorForm";
+import AddCustomerForm from "./components/DynamicVendor and Customer/AddCustomerForm";
+import RemoveCustomerForm from "./components/RemoveCustomerForm";
 
 function App() {
   const [isSystemRunning, setIsSystemRunning] = useState(false);
@@ -14,6 +17,7 @@ function App() {
     ticketReleaseInterval: 3000,
     retrievalInterval: 2000,
   });
+  const [customers, setCustomers] = useState([]);
 
   const handleConfigurationSubmit = (newConfig) => {
     setConfig(newConfig);
@@ -22,6 +26,7 @@ function App() {
       .then(() => console.log("Configuration saved"))
       .catch((error) => console.error("Error saving configuration:", error));
   };
+
   const startSystem = (newConfig) => {
     setIsSystemRunning(true);
     axios
@@ -29,6 +34,7 @@ function App() {
       .then(() => console.log("System started"))
       .catch((error) => console.error("Error starting system:", error));
   };
+
   const stopSystem = (newConfig) => {
     setIsSystemRunning(false);
     axios
@@ -37,18 +43,29 @@ function App() {
       .catch((error) => console.error("Error Stopping system:", error));
   };
 
+  const addCustomer = (newCustomer) => {
+    setCustomers([...customers, newCustomer]);
+  };
+
   return (
     <div className="App">
       <h1> Ticketing System </h1>
-      <ConfigurationForm onSubmit={handleConfigurationSubmit} />
+      <div className="form-container">
+        <ConfigurationForm onSubmit={handleConfigurationSubmit} />
+      </div>
       {isSystemRunning ? <p>System is running</p> : <p>System is stopped</p>}
-      <CustomerForm />
       <ControlPanel
         onStart={() => startSystem(config)}
         onStop={() => stopSystem(config)}
       />
       <TicketDisplay />
       <LogDisplay />
+
+      <h1> Dynamic Vendor/ Customer Management </h1>
+      <AddVendorForm />
+      <RemoveVendorForm />
+      <AddCustomerForm />
+      <RemoveCustomerForm />
     </div>
   );
 }

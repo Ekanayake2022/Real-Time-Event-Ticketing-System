@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function CustomerForm() {
+function AddCustomerForm() {
   const [customerId, setCustomerId] = useState("");
-  const [priority, setPriority] = useState("");
-  const [retrievalInterval, setRetrievalInterval] = useState("");
+  const [priority, setPriority] = useState(0);
+  const [retrievalInterval, setRetrievalInterval] = useState(2000);
 
-  const handleSubmit = (e) => {
+  const handleAddCustomer = (e) => {
     e.preventDefault();
     const newCustomer = {
-      customerId: parseInt(customerId, 10),
-      priority: parseInt(priority, 10),
-      retrievalInterval: parseInt(retrievalInterval, 10),
+      customerId,
+      priority,
+      retrievalInterval,
     };
 
     axios
@@ -27,7 +27,7 @@ function CustomerForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleAddCustomer}>
       <h3> Add customer </h3>
       <label>
         Customer ID:
@@ -60,4 +60,4 @@ function CustomerForm() {
   );
 }
 
-export default CustomerForm;
+export default AddCustomerForm;

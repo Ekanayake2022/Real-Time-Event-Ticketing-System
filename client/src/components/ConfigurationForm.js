@@ -3,10 +3,10 @@ import axios from "axios";
 import "./configurationForm.css";
 
 function ConfigurationForm({ onSubmit }) {
-  const [totalTickets, setTotalTickets] = useState(0);
-  const [ticketReleaseInterval, setTicketReleaseInterval] = useState(0);
-  const [retrievalInterval, setRetrievalInterval] = useState(0);
-  const [maxCapacity, setMaxCapacity] = useState(0);
+  const [totalTickets, setTotalTickets] = useState(50000);
+  const [ticketReleaseInterval, setTicketReleaseInterval] = useState(5);
+  const [retrievalInterval, setRetrievalInterval] = useState(5);
+  const [maxCapacity, setMaxCapacity] = useState(100);
 
   const handleSubmit = (event) => {
     event.preventDefault();

@@ -108,6 +108,90 @@ app.post("/api/customers", (req, res) => {
     .json({ message: `Customer ${customerId} added and started purchasing.` });
 });
 
+// Endpoint to add a vendor
+app.post("/api/vendors", (req, res) => {
+  const { vendorId, ticketsPerRelease, releaseInterval } = req.body;
+
+  if (!vendorId || !`ticketsPerRelease` || !releaseInterval) {
+    return res.status(400).json({ message: "Invalid vendor data" });
+  }
+
+  const newVendor = new Vendor(
+    vendorId,
+    ticketsPerRelease,
+    releaseInterval,
+    ticketPool
+  );
+  vendors.push(newVendor);
+  newVendor.startProducing();
+
+  logger.log(`Vendor ${vendorId} added and start producing tickets.`);
+  res
+    .status(200)
+    .json({ message: `Vendor ${vendorId} added and start producing tickets.` });
+});
+
+//  Endpoint to remove a vendor
+app.delete("/api/vendors/:vendorId", (req, res) => {
+  const vendorId = parseInt(req.params.vendorId);
+  const vendorIndex = vendors.findIndex(
+    (vendor) => vendor.vendorId === vendorId
+  );
+
+  if (vendorIndex === -1) {
+    return res.status(404).json({ message: "Vendor not found" }, vendorIndex);
+  }
+
+  vendors[vendorIndex].stopProducing();
+  vendors.splice(vendorIndex, 1);
+
+  logger.log(`Vendor ${vendorId} removed and stop producing tickets.`);
+  res.status(200).json({
+    message: `Vendor ${vendorId} removed and stop producing tickets.`,
+  });
+});
+
+app.post("/api/customers", (req, res) => {
+  const { customerId, priority, retrievalInterval } = req.body;
+
+  if (!customerId || priority === undefined || !retrievalInterval) {
+    return res.status(400).json({ message: "Invalid request body" });
+  }
+
+  const newCustomer = new Customer(
+    customerId,
+    retrievalInterval,
+    ticketPool,
+    priority
+  );
+  customers.push(newCustomer);
+  newCustomer.startPurchasing();
+
+  logger.log(`Customer ${customerId} added and started purchasing tickets.`);
+  res.status(200).json({
+    message: `Customer ${customerId} added and started purchasing tickets.`,
+  });
+});
+
+// Endpoint to remove a customer
+app.delete("/api/customers/:customerId", (req, res) => {
+  const customerId = parseInt(req.params.customerId);
+  const customerIndex = customers.findIndex(
+    (customer) => customer.customerId === customerId
+  );
+
+  if (customerIndex === -1) {
+    return res.status(404).json({ message: "Customer not found" });
+    customers[customerIndex].stopPurchasing();
+    customers.splice(customerIndex, 1);
+
+    logger.log(`Customer ${customerId} removed and stop purchasing tickets.`);
+    res.status(200).json({
+      message: `Customer ${customerId} removed and stop purchasing tickets.`,
+    });
+  }
+});
+
 // Endpoint to retrieve pending requests
 app.get("/api/requests", (req, res) => {
   const requests = ticketPool.requestQueue.queue.map((customer) =>
