@@ -62,10 +62,16 @@ function App() {
       <LogDisplay />
 
       <h1> Dynamic Vendor/ Customer Management </h1>
-      <AddVendorForm />
-      <RemoveVendorForm />
-      <AddCustomerForm />
-      <RemoveCustomerForm />
+      <div className="dynamic-container">
+        <div className="vendor-form-container">
+          <AddVendorForm />
+          <RemoveVendorForm />
+        </div>
+        <div className="customer-form-container">
+          <AddCustomerForm />
+          <RemoveCustomerForm />
+        </div>
+      </div>
     </div>
   );
 }

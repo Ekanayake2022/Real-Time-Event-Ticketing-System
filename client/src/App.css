@@ -33,3 +33,49 @@ h1 {
   flex: 1 1 45%;
   margin: 5px;
 }
+
+.dynamic-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vendor-form-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.customer-form-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .form-container,
+  .vendor-form-container,
+  .customer-form-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .configuration-form,
+  .customer-form {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container,
+  .vendor-form-container,
+  .customer-form-container {
+    gap: 5px;
+  }
+
+  .configuration-form,
+  .customer-form {
+    margin: 5px 0;
+  }
+}
