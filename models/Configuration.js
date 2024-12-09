@@ -3,11 +3,11 @@ import path from "path";
 
 class Configuration {
   constructor(
-    totalTickets,
+    totalTickets,  // Total number of tickets.
     // ticketReleaseRate,
-    ticketReleaseInterval,
-    retrievalInterval,
-    maxCapacity
+    ticketReleaseInterval, // The interval at which tickets are released by the vendor.
+    retrievalInterval, //The interval at which tickets are retrieved.
+    maxCapacity // The maximum capacity of tickets.
   ) {
     this.totalTickets = totalTickets;
     this.ticketReleaseInterval = ticketReleaseInterval;
@@ -15,6 +15,7 @@ class Configuration {
     this.maxCapacity = maxCapacity;
   }
 
+  // Validate the configuration values.
   validate() {
     if (
       this.totalTickets <= 0 ||
@@ -26,6 +27,7 @@ class Configuration {
     }
   }
 
+  // Save the configuration to a JSON file.
   saveToJson(filePath) {
     try {
       const data = {
@@ -41,6 +43,7 @@ class Configuration {
     }
   }
 
+  // Load the configuration from a JSON file.
   static loadFromJson(filePath) {
     try {
       const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
@@ -55,7 +58,7 @@ class Configuration {
       return null;
     }
   }
-
+// Save the configuration to a text file.
   saveToText(filePath) {
     try {
       const configString = `Total Tickets: ${this.totalTickets}\n
@@ -69,6 +72,7 @@ class Configuration {
     }
   }
 
+  // Load the configuration from a text file.
   static loadFromText(filePath) {
     try {
       const configLines = fs.readFileSync(filePath, "utf-8").split("\n");
@@ -88,6 +92,7 @@ class Configuration {
     }
   }
 
+  // Convert the configuration to a plain object.
   toPlainObject() {
     return {
       totalTickets: this.totalTickets,

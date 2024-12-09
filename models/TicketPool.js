@@ -5,7 +5,7 @@ import PriorityQueue from "./PriorityQueue.js"; // Ensure the correct path and f
 class TicketPool {
   constructor(maxCapacity) {
     this.tickets = [];
-    this.maxCapacity = maxCapacity;
+    this.maxCapacity = maxCapacity; //Maximum number of tickets in the pool
     this.mutex = new Mutex();
     this.requestQueue = new PriorityQueue(); // Priority queue for ticket requests
   }
@@ -55,7 +55,7 @@ class TicketPool {
   addRequest(customer) {
     this.requestQueue.enqueue(customer);
     logger.log(
-      `Customer ${customer.customerId} (Priority: ${customer.priority}) added to the queue.`
+      `Customer ${customer.customerId} (Priority: ${customer.priority}) added to the queue.`,
     );
     this.processRequest();
   }
@@ -68,7 +68,7 @@ class TicketPool {
         const customer = this.requestQueue.dequeue();
         const ticket = this.tickets.shift();
         logger.log(
-          `Customer ${customer.customerId} (Priority: ${customer.priority}) purchased ticket: ${ticket.event} at $${ticket.price}`
+          `Customer ${customer.customerId} (Priority: ${customer.priority}) purchased ticket: ${ticket.event} at $${ticket.price}`,
         );
       } else if (this.tickets.length === 0) {
         logger.log("No tickets available to process requests.");

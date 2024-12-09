@@ -6,7 +6,7 @@ class Customer {
     this.retrievalInterval = retrievalInterval; // Time interval between ticket purchases (in ms)
     this.ticketPool = ticketPool; // Shared ticket pool
     this.timer = null;
-    this.priority = priority;
+    this.priority = priority; //Priority for the customer
   }
 
   // Start the customer "thread", which attempts to purchase tickets at intervals

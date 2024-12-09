@@ -6,22 +6,21 @@ function RemoveCustomerForm() {
 
   const handleRemoveCustomer = (e) => {
     e.preventDefault();
-
     axios
-      .post(`http://localhost:3001/api/customers/${customerId}`)
+      .delete(`http://localhost:3001/api/customers/${customerId}`)
       .then((response) => {
         console.log(response.data.message);
         alert(response.data.message);
       })
       .catch((err) => {
-        console.error("Error remove customer:", err.message);
+        console.error("Error removing customer:", err.message);
         alert("Failed to remove customer");
       });
   };
 
   return (
     <form onSubmit={handleRemoveCustomer}>
-      <h3> Remove customer </h3>
+      <h3>Remove Customer</h3>
       <label>
         Customer ID:
         <input
@@ -31,7 +30,7 @@ function RemoveCustomerForm() {
           required
         />
       </label>
-      <button type="submit"> Remove Customer </button>
+      <button type="submit">Remove Customer</button>
     </form>
   );
 }

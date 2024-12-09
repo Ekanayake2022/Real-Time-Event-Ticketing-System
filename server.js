@@ -151,6 +151,7 @@ app.delete("/api/vendors/:vendorId", (req, res) => {
   });
 });
 
+// Endpoint to add a customer 
 app.post("/api/customers", (req, res) => {
   const { customerId, priority, retrievalInterval } = req.body;
 
@@ -182,14 +183,14 @@ app.delete("/api/customers/:customerId", (req, res) => {
 
   if (customerIndex === -1) {
     return res.status(404).json({ message: "Customer not found" });
-    customers[customerIndex].stopPurchasing();
-    customers.splice(customerIndex, 1);
-
-    logger.log(`Customer ${customerId} removed and stop purchasing tickets.`);
-    res.status(200).json({
-      message: `Customer ${customerId} removed and stop purchasing tickets.`,
-    });
   }
+  customers[customerIndex].stopPurchasing();
+  customers.splice(customerIndex, 1);
+
+  logger.log(`Customer ${customerId} removed and stop purchasing tickets.`);
+  res.status(200).json({
+    message: `Customer ${customerId} removed and stop purchasing tickets.`,
+  });
 });
 
 // Endpoint to retrieve pending requests
@@ -229,6 +230,9 @@ app.get("/api/logs", (req, res) => {
     res.status(500).json({ message: "Error retrieving logs" });
   }
 });
+
+
+ // * Start the server and listen on the specified port
 
 app.listen(PORT, () => {
   logger.log(`Server is running on port ${PORT}`);
