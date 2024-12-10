@@ -1,7 +1,7 @@
 {
   "name": "ticketing-system",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
@@ -24,7 +24,9 @@
     "express": "^4.21.1",
     "fastpriorityqueue": "^0.7.5",
     "fs": "^0.0.1-security",
-    "querystring": "^0.2.1"
+    "querystring": "^0.2.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "description": ""
 }
