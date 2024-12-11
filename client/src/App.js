@@ -13,24 +13,38 @@ import RemoveCustomerForm from "./components/DynamicVendor and Customer/RemoveCu
 const App = () => {
   const [customers, setCustomers] = useState([]);
   const [isSystemRunning, setIsSystemRunning] = useState(false);
-  const [config, setConfig] = useState({});
+  const [config, setConfig] = useState({
+    maxCapacity: 10,
+    ticketReleaseInterval: 3000,
+    retrievalInterval: 2000,
+  });
 
   const addCustomer = (newCustomer) => {
     setCustomers([...customers, newCustomer]);
   };
 
-  const handleConfigurationSubmit = (config) => {
-    setConfig(config);
+  const handleConfigurationSubmit = (newConfig) => {
+    setConfig(newConfig);
+    axios
+      .post("http://localhost:3001/config", newConfig)
+      .then(() => console.log("Configuration saved"))
+      .catch((error) => console.error("Error saving configuration:", error));
   };
 
-  const startSystem = (config) => {
+  const startSystem = (newConfig) => {
     setIsSystemRunning(true);
-    // Add logic to start the system with the given config
+    axios
+      .post("http://localhost:3001/start", newConfig)
+      .then(() => console.log("System started"))
+      .catch((error) => console.error("Error starting system:", error));
   };
 
-  const stopSystem = (config) => {
+  const stopSystem = (newConfig) => {
     setIsSystemRunning(false);
-    // Add logic to stop the system with the given config
+    axios
+      .post("http://localhost:3001/stop", newConfig)
+      .then(() => console.log("System Stopped"))
+      .catch((error) => console.error("Error Stopping system:", error));
   };
 
   return (
@@ -58,9 +72,7 @@ const FormContainer = ({ onSubmit }) => (
 );
 
 const SystemStatus = ({ isRunning }) => (
-  <p className="status-message">
-    {isRunning ? "System is running" : "System is stopped"}
-  </p>
+  <p>{isRunning ? "System is running" : "System is stopped"}</p>
 );
 
 const DynamicContainer = ({ addCustomer }) => (
