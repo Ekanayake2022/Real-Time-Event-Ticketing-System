@@ -39,42 +39,38 @@ Install frontend depencies:
 
 The backend and frontend server will start on http://localhost:3001 and http://localhost:3000
 
-### Usage
+Usage
 
 1. Open your browser and navigate to http://localhost:3000
 2. Use the control panel to start and stop the ticketing system
 3. Add and remove vendors and customers using the provided forms.
 4. View system logs and ticket availability in real-time.
 
-### API Endpoints
+API Endpoints
 
-Configuration
+## System Control
 
-1. POST /api/config: Save configuration to JSON file.
+1. **POST /api/start**: Start the ticketing system.
+2. **POST /api/stop**: Stop the ticketing system.
 
-System control
+## Vendors
 
-1. POST /api/start: Start the ticketing system.
-2. POST /api/stop: Stop the ticketing system.
+1. **POST /api/vendors**: Add a vendor.
+2. **DELETE /api/vendors/:vendorId**: Remove a vendor.
 
-Vendors
+## Customers
 
-1. POST /api/vendors: Add a vendor.
-2. DELETE /api/vendors/:vendorId: Remove a vendor.
+1. **POST /api/customers**: Add a customer.
+2. **DELETE /api/customers/:id**: Remove a customer.
 
-Customers
+## Tickets
 
-1. POST /api/customers: Add a customer.
-2. DELETE /api/customers/:id: Remove a customer.
+1. **GET /api/tickets**: Retrieve tickets.
 
-Tickets
+## Logs
 
-1. GET /api/tickets: Retrieve tickets.
+1. **GET /api/logs**: Retrieve logs.
 
-Logs
+## API Documentation
 
-1. GET /api/logs: Retrieve logs.
-
-API Documentation
-
-1. Open your browser and navigate to http://localhost:3001/api-docs/
+1. Open your browser and navigate to [http://localhost:3001/api-docs/](http://localhost:3001/api-docs/)
