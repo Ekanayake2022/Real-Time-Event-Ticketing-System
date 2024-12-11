@@ -39,14 +39,14 @@ Install frontend depencies:
 
 The backend and frontend server will start on http://localhost:3001 and http://localhost:3000
 
-Usage
+### Usage
 
 1. Open your browser and navigate to http://localhost:3000
 2. Use the control panel to start and stop the ticketing system
 3. Add and remove vendors and customers using the provided forms.
 4. View system logs and ticket availability in real-time.
 
-API Endpoints
+### API Endpoints
 
 Configuration
 
