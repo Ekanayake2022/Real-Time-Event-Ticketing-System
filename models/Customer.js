@@ -2,8 +2,8 @@ import logger from "../utils/logger.js";
 import User from "./User.js";
 
 class Customer extends User {
-  constructor(customerId, retrievalInterval, ticketPool, priority = 0) {
-    super(customerId, retrievalInterval, ticketPool);
+  constructor(id, retrievalInterval, ticketPool, priority = 0) {
+    super(id, retrievalInterval, ticketPool);
     this.priority = priority; // Priority for the customer
   }
 
@@ -23,7 +23,7 @@ class Customer extends User {
 
   toJSON() {
     return {
-      customerId: this.id,
+      id: this.id,
       retrievalInterval: this.interval,
       priority: this.priority,
     };

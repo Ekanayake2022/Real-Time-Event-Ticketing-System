@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 
 function AddCustomerForm() {
-  const [customerId, setCustomerId] = useState("");
+  const [id, setid] = useState("");
   const [priority, setPriority] = useState(0);
   const [retrievalInterval, setRetrievalInterval] = useState(2000);
 
   const handleAddCustomer = (e) => {
     e.preventDefault();
     const newCustomer = {
-      customerId,
+      id,
       priority,
       retrievalInterval,
     };
@@ -33,8 +33,8 @@ function AddCustomerForm() {
         Customer ID:
         <input
           type="text"
-          value={customerId}
-          onChange={(e) => setCustomerId(e.target.value)}
+          value={id}
+          onChange={(e) => setid(e.target.value)}
           required
         />
       </label>

@@ -53,7 +53,7 @@ function TicketDisplay() {
         {requests.length > 0 ? (
           requests.map((request) => (
             <li key={request.id}>
-              <span className="request-customer">{request.customerId}</span>
+              <span className="request-customer">{request.id}</span>
               <span className="request-priority">{request.priority}</span>
             </li>
           ))

@@ -1,4 +1,3 @@
-
 # Ticketing System
 
 This project is a ticketing system that manages ticket pools, vendors, and customers. It includes a backend server built with Node.js and Express, and a frontend client built with React.
@@ -66,7 +65,7 @@ Vendors
 Cusomers
 
 1. POST /api/customers: Add a customer.
-2. DELETE /api/customers/:customerId: Remove a customer.
+2. DELETE /api/customers/:id: Remove a customer.
 
 Tickets
 

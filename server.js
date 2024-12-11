@@ -43,7 +43,7 @@ let isSystemRunning = false;
  *     Customer:
  *       type: object
  *       properties:
- *         customerId:
+ *         id:
  *           type: integer
  *         retrievalInterval:
  *           type: integer
@@ -193,24 +193,19 @@ app.post("/api/stop", (req, res) => {
 
 // Endpoint to add a customer
 app.post("/api/customers", (req, res) => {
-  const { customerId, priority, retrievalInterval } = req.body;
+  const { id, priority, retrievalInterval } = req.body;
 
-  if (!customerId || priority === undefined || !retrievalInterval) {
+  if (!id || priority === undefined || !retrievalInterval) {
     return res.status(400).json({ message: "Invalid request body" });
   }
 
-  const newCustomer = new Customer(
-    customerId,
-    retrievalInterval,
-    ticketPool,
-    priority
-  );
+  const newCustomer = new Customer(id, retrievalInterval, ticketPool, priority);
   customers.push(newCustomer);
   newCustomer.startPurchasing();
 
   res
     .status(200)
-    .json({ message: `Customer ${customerId} added and started purchasing.` });
+    .json({ message: `Customer ${id} added and started purchasing.` });
 });
 
 /**
@@ -312,35 +307,30 @@ app.delete("/api/vendors/:vendorId", (req, res) => {
 
 // Endpoint to add a customer
 app.post("/api/customers", (req, res) => {
-  const { customerId, priority, retrievalInterval } = req.body;
+  const { id, priority, retrievalInterval } = req.body;
 
-  if (!customerId || priority === undefined || !retrievalInterval) {
+  if (!id || priority === undefined || !retrievalInterval) {
     return res.status(400).json({ message: "Invalid request body" });
   }
 
-  const newCustomer = new Customer(
-    customerId,
-    retrievalInterval,
-    ticketPool,
-    priority
-  );
+  const newCustomer = new Customer(id, retrievalInterval, ticketPool, priority);
   customers.push(newCustomer);
   newCustomer.startPurchasing();
 
-  logger.log(`Customer ${customerId} added and started purchasing tickets.`);
+  logger.log(`Customer ${id} added and started purchasing tickets.`);
   res.status(200).json({
-    message: `Customer ${customerId} added and started purchasing tickets.`,
+    message: `Customer ${id} added and started purchasing tickets.`,
   });
 });
 
 /**
  * @swagger
- * /api/customers/{customerId}:
+ * /api/customers/{id}:
  *   delete:
  *     summary: Remove a customer
  *     parameters:
  *       - in: path
- *         name: customerId
+ *         name: id
  *         required: true
  *         schema:
  *           type: integer
@@ -352,11 +342,9 @@ app.post("/api/customers", (req, res) => {
  */
 
 // Endpoint to remove a customer
-app.delete("/api/customers/:customerId", (req, res) => {
-  const customerId = parseInt(req.params.customerId);
-  const customerIndex = customers.findIndex(
-    (customer) => customer.customerId === customerId
-  );
+app.delete("/api/customers/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const customerIndex = customers.findIndex((customer) => customer.id === id);
 
   if (customerIndex === -1) {
     return res.status(404).json({ message: "Customer not found" });
@@ -364,9 +352,9 @@ app.delete("/api/customers/:customerId", (req, res) => {
   customers[customerIndex].stopPurchasing();
   customers.splice(customerIndex, 1);
 
-  logger.log(`Customer ${customerId} removed and stop purchasing tickets.`);
+  logger.log(`Customer ${id} removed and stop purchasing tickets.`);
   res.status(200).json({
-    message: `Customer ${customerId} removed and stop purchasing tickets.`,
+    message: `Customer ${id} removed and stop purchasing tickets.`,
   });
 });
 
