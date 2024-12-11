@@ -62,7 +62,7 @@ Vendors
 1. POST /api/vendors: Add a vendor.
 2. DELETE /api/vendors/:vendorId: Remove a vendor.
 
-Cusomers
+Customers
 
 1. POST /api/customers: Add a customer.
 2. DELETE /api/customers/:id: Remove a customer.
